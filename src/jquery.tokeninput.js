@@ -1,7 +1,6 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.6.0
- * (That version number is incorrect; this is master from https://github.com/Mean-CJ/jquery-tokeninput)
+ * Version 1.6.0-master
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
