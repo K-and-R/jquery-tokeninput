@@ -556,7 +556,10 @@ $.TokenList = function (input, url_or_data, settings) {
             token = $(input).data("settings").onFreeTaggingAdd.call(hidden_input, token);
           }
           var object = {};
-          object[$(input).data("settings").tokenValue] = object[$(input).data("settings").propertyToSearch] = token;
+          // Place the new value in a wrapper that the server can look for in order to identify a new item
+          // TODO: Make this happen in a callback, rather than hard-coding this behavior
+          object[$(input).data("settings").tokenValue] = '<<@@NEWITEM<' + token + '>@@>>';
+          object[$(input).data("settings").propertyToSearch] = token;
           add_token(object);
         });
     }
