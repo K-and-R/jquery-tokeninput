@@ -1,6 +1,7 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
  * Version 1.6.0
+ * (That version number is incorrect; this is master from https://github.com/Mean-CJ/jquery-tokeninput)
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
@@ -338,9 +339,9 @@ $.TokenList = function (input, url_or_data, settings) {
                     } else {
                       $(this).val("");
                     }
-                    event.stopPropagation();
-                    event.preventDefault();
                   }
+                  event.stopPropagation();
+                  event.preventDefault();
                   return false;
 
                 case KEY.ESCAPE:
