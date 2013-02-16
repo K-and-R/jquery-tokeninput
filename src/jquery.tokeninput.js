@@ -37,13 +37,13 @@ var DEFAULT_SETTINGS = {
     enableHTML: false,
 
     resultsFormatter: function(item) {
-      var string = item[this.propertyToSearch];
-      return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
+      var string = item[$(this).data("settings").propertyToSearch];
+      return "<li>" + ($(this).data("settings").enableHTML ? string : _escapeHTML(string)) + "</li>";
     },
 
     tokenFormatter: function(item) {
-      var string = item[this.propertyToSearch];
-      return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
+      var string = item[$(this).data("settings").propertyToSearch];
+      return "<li><p>" + ($(this).data("settings").enableHTML ? string : _escapeHTML(string)) + "</p></li>";
     },
 
     // Tokenization settings
@@ -566,7 +566,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(item) {
-        var $this_token = $($(input).data("settings").tokenFormatter(item));
+        var $this_token = $($(input).data("settings").tokenFormatter.call($(input), item));
         var readonly = item.readonly === true ? true : false;
 
         if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
@@ -829,7 +829,7 @@ $.TokenList = function (input, url_or_data, settings) {
             $.each(results, function(index, value) {
 				if( ! settings.preventDuplicates || ! isSelected(value[settings.propertyToSearch])){
 
-					var this_li = $(input).data("settings").resultsFormatter(value);
+					var this_li = $(input).data("settings").resultsFormatter.call($(input), value);
 
 					this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
 
