@@ -291,15 +291,19 @@ $.TokenList = function (input, url_or_data, settings) {
                         }
                     } else {
                         var dropdown_item = null;
-
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
+                        
+                        if(!selected_dropdown_item) {
+                            select_first_dropdown_item();
                         } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
-                        }
+                            if(event.keyCode === KEY.DOWN || ($(input).data("settings").allowFreeTagging && event.keyCode === KEY.RIGHT)) {
+                                dropdown_item = $(selected_dropdown_item).next();
+                            } else if(event.keyCode === KEY.UP || ($(input).data("settings").allowFreeTagging && event.keyCode === KEY.LEFT)) {
+                                dropdown_item = $(selected_dropdown_item).prev();
+                            }
 
-                        if(dropdown_item.length) {
-                            select_dropdown_item(dropdown_item);
+                            if(dropdown_item.length) {
+                                select_dropdown_item(dropdown_item);
+                            }
                         }
                     }
                     return false;
@@ -620,8 +624,8 @@ $.TokenList = function (input, url_or_data, settings) {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
                 if(existing_data && 
-					 ( existing_data[settings.tokenValue] === item[settings.tokenValue]  || existing_data[settings.propertyToSearch] === item[settings.propertyToSearch] )
-				 ) {
+                     ( existing_data[settings.tokenValue] === item[settings.tokenValue]  || existing_data[settings.propertyToSearch] === item[settings.propertyToSearch] )
+                 ) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -825,23 +829,23 @@ $.TokenList = function (input, url_or_data, settings) {
                 results = results.slice(0, $(input).data("settings").resultsLimit);
             }
 
-			var noResults = true;
+            var noResults = true;
             $.each(results, function(index, value) {
-				if( ! settings.preventDuplicates || ! isSelected(value[settings.propertyToSearch])){
+                if( ! settings.preventDuplicates || ! isSelected(value[settings.propertyToSearch])){
 
-					var this_li = $(input).data("settings").resultsFormatter.call($(input), value);
+                    var this_li = $(input).data("settings").resultsFormatter.call($(input), value);
 
-					this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
+                    this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
 
-					this_li = $(this_li).appendTo(dropdown_ul);
+                    this_li = $(this_li).appendTo(dropdown_ul);
 
-					if(index % 2) {
-						this_li.addClass($(input).data("settings").classes.dropdownItem);
-					} else {
-						this_li.addClass($(input).data("settings").classes.dropdownItem2);
-					}
+                    if(index % 2) {
+                        this_li.addClass($(input).data("settings").classes.dropdownItem);
+                    } else {
+                        this_li.addClass($(input).data("settings").classes.dropdownItem2);
+                    }
 
-					if(noResults) {
+                    if(noResults && !$(input).data("settings").allowFreeTagging) {
                         select_dropdown_item(this_li);
                     }
 
@@ -849,7 +853,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
                     $.data(this_li.get(0), "tokeninput", value);
 
-				}
+                }
             });
 
             if(noResults){
@@ -866,9 +870,10 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
            show_no_results();
         }
-        
-        // Any time the dropdown selection is changing, there's no longer a selected item.
-        selected_dropdown_item = null;
+    }
+    
+    function select_first_dropdown_item() {
+        select_dropdown_item(dropdown.find('li').first());
     }
 
     function show_no_results() {
