@@ -866,6 +866,9 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
            show_no_results();
         }
+        
+        // Any time the dropdown selection is changing, there's no longer a selected item.
+        selected_dropdown_item = null;
     }
 
     function show_no_results() {
